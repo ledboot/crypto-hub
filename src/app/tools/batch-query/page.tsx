@@ -14,7 +14,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Trash2 } from "lucide-react";
 import { Address } from "@/types/address";
 import { isValidAddress } from "@/lib/ethers-tools";
-import { SupportedChains } from "@/constant";
 
 export default function BatchQueryPage() {
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -22,7 +21,6 @@ export default function BatchQueryPage() {
   const [textareaValue, setTextareaValue] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
   const [isAppendMode, setIsAppendMode] = useState(false);
-  const [rpcList, setRpcList] = useState<string[]>([]);
 
   const openDialog = (appendMode: boolean) => {
     setIsAppendMode(appendMode);
@@ -33,13 +31,6 @@ export default function BatchQueryPage() {
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     setTextareaValue(event.target.value);
-  };
-
-  const handleChainChange = (selectedChain: string) => {
-    const selected = SupportedChains.find(chain => chain.name === selectedChain);
-    if (selected) {
-      setRpcList(selected.rpcList);
-    }
   };
 
   const handleConfirm = () => {
