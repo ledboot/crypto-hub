@@ -14,6 +14,10 @@ export const MenuItems = [
         title: "批量转账(多对一)",
         href: "",
       },
+      {
+        title: "HD Wallet 生成器",
+        href: "/tools/hd-wallet",
+      },
     ],
     href: "",
   },

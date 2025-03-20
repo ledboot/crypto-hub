@@ -22,7 +22,7 @@ import {
 import { Address } from "@/types/address";
 import { SupportedChains } from "@/constant";
 import { ComboInputLabel } from "@/components/combo-input-label";
-import { Token } from "@/types/Token";
+import { Token } from "@/types/token";
 interface BatchQueryFormProps {
   openDialog: (appendMode: boolean) => void;
   addresses: Address[];
