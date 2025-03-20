@@ -237,7 +237,7 @@ export default function HDWalletGenerator() {
                       </TooltipTrigger>
                       <TooltipContent>
                         <p className="max-w-xs">
-                          BIP44 account index (m/44'/coin'/account'/0/x)
+                          BIP44 account index (m/44&apos;/coin&apos;/account&apos;/0/x)
                         </p>
                       </TooltipContent>
                     </Tooltip>
