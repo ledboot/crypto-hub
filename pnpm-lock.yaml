@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@noble/hashes':
+        specifier: ^1.7.1
+        version: 1.7.1
       '@noble/secp256k1':
         specifier: ^2.2.3
         version: 2.2.3
@@ -74,9 +77,6 @@ importers:
       sass:
         specifier: ^1.85.0
         version: 1.86.0
-      sha3:
-        specifier: link:@noble/hashes/sha3
-        version: link:@noble/hashes/sha3
       tailwind-merge:
         specifier: ^3.0.1
         version: 3.0.2
