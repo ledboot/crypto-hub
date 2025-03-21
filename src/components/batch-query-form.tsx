@@ -19,10 +19,10 @@ import {
   getERC20Metadata,
   checkIfERC20,
 } from "@/lib/ethers-tools";
-import { Address } from "@/types/address";
+import { Address, Token } from "@/types/common";
 import { SupportedChains } from "@/constant";
 import { ComboInputLabel } from "@/components/combo-input-label";
-import { Token } from "@/types/token";
+
 interface BatchQueryFormProps {
   openDialog: (appendMode: boolean) => void;
   addresses: Address[];

@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ChevronDown } from "lucide-react"
-import { Address } from "@/types/address"
+import { Address } from "@/types/common"
 
 interface BatchQueryTableProps {
   openDialog: (appendMode: boolean) => void;

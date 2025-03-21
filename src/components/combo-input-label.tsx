@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Token } from "@/types/token";
+import { Token } from "@/types/common";
 import { FC } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import clsx from "clsx";

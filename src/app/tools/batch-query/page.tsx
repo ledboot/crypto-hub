@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Trash2 } from "lucide-react";
-import { Address } from "@/types/address";
+import { Address } from "@/types/common";
 import { isValidAddress } from "@/lib/ethers-tools";
 
 export default function BatchQueryPage() {
