@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Search } from "lucide-react"
+import { Search} from "lucide-react"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,9 +12,11 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import { MenuItems } from "@/constant"
 import Image from "next/image"
 import LogoIcon from "@/app/icons/logo.svg"
+import GithubIcon from "@/app/icons/github-mark.svg"
 
 export function MainNav() {
   return (
@@ -60,6 +62,13 @@ export function MainNav() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input type="search" placeholder="输入搜索内容" className="w-64 pl-9" />
+          </div>
+          <div>
+            <Link href="https://github.com/ledboot/crypto-hub" target="_blank" rel="noopener noreferrer">
+            <Button variant="ghost" size="icon" className="w-6 h-6">
+              <Image src={GithubIcon} alt="github" />
+            </Button>
+          </Link>
           </div>
         </div>
       </div>
