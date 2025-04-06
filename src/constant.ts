@@ -18,6 +18,10 @@ export const MenuItems = [
         title: "HD Wallet 生成器",
         href: "/tools/hd-wallet",
       },
+      {
+        title: "跨链桥",
+        href: "/tools/cross-chain-bridge",
+      },
     ],
     href: "",
   },

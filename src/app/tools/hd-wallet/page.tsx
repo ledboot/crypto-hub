@@ -178,7 +178,7 @@ export default function HDWalletGenerator() {
   };
 
   return (
-    <div className="container mx-auto py-20 mt-10">
+    <div className="container mx-auto py-20">
       <div
         className={cn(
           "grid grid-rows-1 grid-cols-2 gap-6 transition-all duration-500 ease-in-out",

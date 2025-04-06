@@ -15,8 +15,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { MenuItems } from "@/constant"
 import Image from "next/image"
-import LogoIcon from "@/app/icons/logo.svg"
-import GithubIcon from "@/app/icons/github-mark.svg"
+import LogoIcon from "@/app/assets/icons/logo.svg"
+import GithubIcon from "@/app/assets/icons/github-mark.svg"
 
 export function MainNav() {
   return (
