@@ -1,7 +1,12 @@
 import { http,createConfig } from "wagmi";
 import {injected,metaMask,walletConnect} from "wagmi/connectors"
 import {mainnet,optimism,arbitrum} from "wagmi/chains"
-import {walletConnectProjectId} from "./constants/constants"
+
+export const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID as string;
+
+if (!projectId) {
+  throw new Error("NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is not set");
+}
 
 const dappMetadata = {
     name: "CryptoHub Bridge",
@@ -9,7 +14,7 @@ const dappMetadata = {
     iconUrl: "https://cryptohub.lol/logo.svg",
 };
 
-export const config = createConfig({
+export const wagmiConfig = createConfig({
     chains:[mainnet,optimism,arbitrum],
     transports:{
         [mainnet.id]:http(),
@@ -22,7 +27,7 @@ export const config = createConfig({
             dappMetadata,
         }),
         walletConnect({
-            projectId:walletConnectProjectId,
+            projectId,
         }),
     ],
     

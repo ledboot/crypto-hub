@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "@/styles/globals.css";
 import { MainNav } from "@/components/main-nav";
-
 import { Footer } from "@/components/footer";
 const geistSans = Geist({
   weight: ["400", "500", "700"],
