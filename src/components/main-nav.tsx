@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Search, Menu } from "lucide-react"
+import { Search, Menu, X } from "lucide-react"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -92,7 +92,7 @@ export function MainNav() {
             <div className="flex items-center mb-6">
               <Image src="/logo.svg" alt="logo" width={120} height={30} />
               <Button variant="ghost" size="icon" className="ml-auto" onClick={() => setMobileMenuOpen(false)} aria-label="关闭菜单">
-                ×
+                <X className="w-6 h-6" />
               </Button>
             </div>
             <nav>

@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import "@/styles/globals.css";
 import { MainNav } from "@/components/main-nav";
 import { Footer } from "@/components/footer";
+import { Toaster } from "sonner";
 const geistSans = Geist({
   weight: ["400", "500", "700"],
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({
         <meta name="google-adsense-account" content="ca-pub-3198470578962995"/>
       </head>
       <body className={`${geistSans.className} flex flex-col min-h-screen`}>
+        <Toaster position="bottom-right" richColors />
         <MainNav />
         <main className="flex-1">{children}</main>
         <Footer />
