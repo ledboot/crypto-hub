@@ -21,6 +21,23 @@ export const MenuItems = [
     ],
     href: "",
   },
+  // {
+  //   title: "跨链桥",
+  //   href: "/tools/cross-chain-bridge",
+  // },
+  {
+    title: "Binance Alpha",
+    items: [
+      {
+        title: "交易统计",
+        href: "/binance-alpha/trading-statistics",
+      },
+      {
+        title: "钱包查询",
+        href: "/binance-alpha/wallet-query",
+      },
+    ],
+  },
 ];
 
 export const SupportedChains = [
