@@ -16,6 +16,34 @@ export const metadata: Metadata = {
   title: "CryptoHubs",
   description: "A hub for all your crypto needs",
   keywords: ["crypto tools", "crypto hubs","blockchain", "wallet", "crypto exchange", "crypto news", "crypto market", "analysis", "trading"],
+  openGraph: {
+    title: "Crypto Hubs - The Ultimate All-in-One Crypto Toolkit",
+    description: "Crypto Hubs offers a comprehensive suite of cryptocurrency tools, including batch address queries, mass token transfers, wallet analytics, on-chain data statistics, and market analysis. Supporting multiple blockchain ecosystems.",
+    url: "https://cryptohub.lol",
+    siteName: "Crypto Hubs",
+    type: "website",
+    images: [
+      {
+        url: "https://cryptohub.lol/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Crypto Hubs - The Ultimate All-in-One Crypto Toolkit",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Crypto Hubs - The Ultimate All-in-One Crypto Toolkit",
+    description: "Crypto Hubs offers a comprehensive suite of cryptocurrency tools, including batch address queries, mass token transfers, wallet analytics, on-chain data statistics, and market analysis. Supporting multiple blockchain ecosystems.",
+    images: [
+      {
+        url: "https://cryptohub.lol/og-image.png",
+        width: 1200,
+        height: 628,
+        alt: "Crypto Hubs - The Ultimate All-in-One Crypto Toolkit",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

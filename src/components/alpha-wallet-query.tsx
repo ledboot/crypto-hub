@@ -175,49 +175,53 @@ export function AlphaWalletQuery() {
 	}
 
 	return (
-		<div className="container mx-auto space-y-6 py-20">
+		<div className="container mx-auto space-y-4 sm:space-y-6 py-10 sm:py-20 px-2 sm:px-4 md:px-10">
 			{/* Wallet Address Input */}
-			<Card>
-				<CardHeader>
-					<CardTitle>钱包地址查询</CardTitle>
-					<CardDescription>输入钱包地址查看交易统计</CardDescription>
+			<Card className="p-2 sm:p-4">
+				<CardHeader className="p-2 sm:p-4">
+					<CardTitle className="text-base sm:text-xl">钱包地址查询</CardTitle>
+					<CardDescription className="text-xs sm:text-sm">输入钱包地址查看交易统计</CardDescription>
 				</CardHeader>
-				<CardContent>
-					<div className="flex space-x-2">
+				<CardContent className="p-2 sm:p-4">
+					<div className="flex space-x-1 sm:space-x-2">
 						<Input
 							placeholder="输入钱包地址"
 							value={walletAddress}
 							onChange={(e) => setWalletAddress(e.target.value)}
-							className="flex-1"
+							className="flex-1 text-xs sm:text-base px-2 sm:px-4 py-1 sm:py-2"
 						/>
-						<Button onClick={handleSearch} disabled={isLoading || !walletAddress}>
-							<Search className="mr-2 h-4 w-4" />
+						<Button onClick={handleSearch} disabled={isLoading || !walletAddress} className="px-2 py-1 text-xs sm:text-sm md:px-4 md:py-2 md:text-base">
+							<Search className="mr-1 sm:mr-2 h-4 w-4" />
 							{isLoading ? '查询中...' : '查询'}
 						</Button>
 						<Dialog open={openDialog} onOpenChange={setOpenDialog}>
 							<DialogTrigger asChild>
-								<Button variant="outline">
-									<Settings className="mr-2 h-4 w-4" />
-									设置
+								<Button
+									variant="outline"
+									className="px-2 py-1 text-xs sm:text-sm md:px-4 md:py-2 md:text-base"
+								>
+									<Settings className="mr-1 sm:mr-2 h-4 w-4" />
+									<span className="sm:inline">设置</span>
 								</Button>
 							</DialogTrigger>
-							<DialogContent>
+							<DialogContent className="p-2 sm:p-4">
 								<DialogHeader>
-									<DialogTitle>过滤设置</DialogTitle>
-									<DialogDescription>设置要过滤的代币地址</DialogDescription>
+									<DialogTitle className="text-base sm:text-lg">过滤设置</DialogTitle>
+									<DialogDescription className="text-xs sm:text-sm">设置要过滤的代币地址</DialogDescription>
 								</DialogHeader>
-								<div className="space-y-4">
+								<div className="space-y-2 sm:space-y-4">
 									<div>
-										<Label htmlFor="filtered-tokens">过滤代币地址</Label>
+										<Label htmlFor="filtered-tokens" className="text-xs sm:text-sm">过滤代币地址</Label>
 										<Textarea
 											id="filtered-tokens"
 											placeholder="输入要过滤的代币合约地址，每行一个"
 											value={filterTokenAddresses}
 											onChange={(e) => setFilterTokenAddresses(e.target.value)}
-											rows={6}
+											rows={4}
+											className="text-xs sm:text-sm"
 										/>
 									</div>
-									<Button className="w-full" onClick={handleSaveFilter}>
+									<Button className="w-full text-xs sm:text-sm py-1 sm:py-2" onClick={handleSaveFilter}>
 										保存设置
 									</Button>
 								</div>
@@ -228,42 +232,42 @@ export function AlphaWalletQuery() {
 			</Card>
 
 			{/* Summary Cards */}
-			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">总交易量</CardTitle>
+			<div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
+				<Card className="p-2 sm:p-4">
+					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-2 sm:p-4">
+						<CardTitle className="text-xs sm:text-sm font-medium">总交易量</CardTitle>
 						<DollarSign className="h-4 w-4 text-muted-foreground" />
 					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">${formatMoney(summary?.totalValue)}</div>
+					<CardContent className="p-2 sm:p-4">
+						<div className="text-lg sm:text-2xl font-bold">${formatMoney(summary?.totalValue)}</div>
 					</CardContent>
 				</Card>
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">获得积分</CardTitle>
+				<Card className="p-2 sm:p-4">
+					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-2 sm:p-4">
+						<CardTitle className="text-xs sm:text-sm font-medium">获得积分</CardTitle>
 						<TrendingUp className="h-4 w-4 text-muted-foreground" />
 					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">{summary?.totalPoints}</div>
+					<CardContent className="p-2 sm:p-4">
+						<div className="text-lg sm:text-2xl font-bold">{summary?.totalPoints}</div>
 					</CardContent>
 				</Card>
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">总损耗</CardTitle>
+				<Card className="p-2 sm:p-4">
+					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-2 sm:p-4">
+						<CardTitle className="text-xs sm:text-sm font-medium">总损耗</CardTitle>
 						<TrendingDown className="h-4 w-4 text-muted-foreground" />
 					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">{getConsumeFormat(summary?.totalLoss || 0)}</div>
+					<CardContent className="p-2 sm:p-4">
+						<div className="text-lg sm:text-2xl font-bold">{getConsumeFormat(summary?.totalLoss || 0)}</div>
 						<p className="text-xs text-muted-foreground">包含Gas费用</p>
 					</CardContent>
 				</Card>
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Gas费用</CardTitle>
+				<Card className="p-2 sm:p-4">
+					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-2 sm:p-4">
+						<CardTitle className="text-xs sm:text-sm font-medium">Gas费用</CardTitle>
 						<Zap className="h-4 w-4 text-muted-foreground" />
 					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">
+					<CardContent className="p-2 sm:p-4">
+						<div className="text-lg sm:text-2xl font-bold">
 							${formatMoney(summary?.totalGasUsd)}{' '}
 							<span className="text-xs text-muted-foreground">({summary?.totalGas} BNB)</span>
 						</div>
@@ -272,27 +276,27 @@ export function AlphaWalletQuery() {
 			</div>
 
 			{/* 当日进度 */}
-			<div className="mt-4">
-				<Card>
-					<CardHeader>
-						<CardTitle>当日进度</CardTitle>
-						<CardDescription>今日交易数据</CardDescription>
+			<div className="mt-2 sm:mt-4">
+				<Card className="p-2 sm:p-4">
+					<CardHeader className="p-2 sm:p-4">
+						<CardTitle className="text-base sm:text-lg">当日进度</CardTitle>
+						<CardDescription className="text-xs sm:text-sm">今日交易数据</CardDescription>
 					</CardHeader>
-					<CardContent>
-						<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+					<CardContent className="p-2 sm:p-4">
+						<div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
 							<div>
-								<div className="text-gray-400 mb-1">今日交易量</div>
-								<div className="font-bold">${formatMoney(todaySummary?.totalValue || 0)}</div>
+								<div className="text-gray-400 mb-1 text-xs sm:text-sm">今日交易量</div>
+								<div className="font-bold text-base sm:text-lg">${formatMoney(todaySummary?.totalValue || 0)}</div>
 							</div>
 							<div>
-								<div className="text-gray-400 mb-1">今日积分</div>
-								<div className="font-bold">{todaySummary?.totalPoints || 0}</div>
+								<div className="text-gray-400 mb-1 text-xs sm:text-sm">今日积分</div>
+								<div className="font-bold text-base sm:text-lg">{todaySummary?.totalPoints || 0}</div>
 							</div>
 							<div>
-								<div className="text-gray-400 mb-1">今日损耗(包含Gas)</div>
+								<div className="text-gray-400 mb-1 text-xs sm:text-sm">今日损耗(包含Gas)</div>
 								<Tooltip>
 									<TooltipTrigger>
-										<div className="font-bold underline">{getConsumeFormat(todaySummary?.totalLossWithGas || 0)}</div>
+										<div className="font-bold underline text-base sm:text-lg">{getConsumeFormat(todaySummary?.totalLossWithGas || 0)}</div>
 									</TooltipTrigger>
 									<TooltipContent>
 										<p>消耗: {getConsumeFormat(todaySummary?.totalLoss || 0)}</p>
@@ -301,13 +305,13 @@ export function AlphaWalletQuery() {
 								</Tooltip>
 							</div>
 							<div>
-								<div className="text-gray-400 mb-1">
+								<div className="text-gray-400 mb-1 text-xs sm:text-sm">
 									进度 {Number(todaySummary?.progressPercentSegment || 0).toFixed(2)}%
 								</div>
-								<div className="mt-2">
-									<div className="w-full bg-gray-200 rounded-full h-3">
+								<div className="mt-1 sm:mt-2">
+									<div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
 										<div
-											className="bg-green-500 h-3 rounded-full transition-all"
+											className="bg-green-500 h-2 sm:h-3 rounded-full transition-all"
 											style={{
 												width: `${todaySummary?.progressPercentSegment || 0}%`,
 											}}
@@ -324,13 +328,13 @@ export function AlphaWalletQuery() {
 			</div>
 
 			{/* Trading Records */}
-			<Card>
-				<CardHeader>
-					<CardTitle>交易记录</CardTitle>
-					<CardDescription>按天分组的交易历史</CardDescription>
+			<Card className="p-2 sm:p-4">
+				<CardHeader className="p-2 sm:p-4">
+					<CardTitle className="text-base sm:text-lg">交易记录</CardTitle>
+					<CardDescription className="text-xs sm:text-sm">按天分组的交易历史</CardDescription>
 				</CardHeader>
-				<CardContent>
-					<div className="space-y-4">
+				<CardContent className="p-2 sm:p-4">
+					<div className="space-y-2 sm:space-y-4">
 						{transactionsData.length > 0 ? (
 							transactionsData.map((dayRecord) => {
 								const date = dayRecord.date
@@ -345,15 +349,16 @@ export function AlphaWalletQuery() {
 												...prev,
 												[date]: !isExpanded,
 											}))
-										}>
-										<div className="p-4 flex justify-between items-center">
-											<h4 className="text-base font-medium">{date}</h4>
+										}
+									>
+										<div className="p-2 sm:p-4 flex justify-between items-center">
+											<h4 className="text-sm sm:text-base font-medium">{date}</h4>
 											<span className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}>
-												<ChevronDown className="w-5 h-5" />
+												<ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
 											</span>
 										</div>
-										<div className="p-4 pt-0">
-											<div className="grid grid-cols-2 sm:grid-cols-5 gap-4 text-sm">
+										<div className="p-2 sm:p-4 pt-0">
+											<div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-4 text-xs sm:text-sm">
 												<div>
 													<p className="text-gray-400 mb-1">有效交易次数</p>
 													<p className="font-medium">{dayRecord.transactionCount} 笔</p>
@@ -392,39 +397,39 @@ export function AlphaWalletQuery() {
 											</div>
 										</div>
 										{isExpanded && (
-											<div className="border-t p-4 overflow-auto bg-gray-50">
-												<table className="w-full table-auto rounded-lg overflow-hidden shadow-md">
+											<div className="border-t p-2 sm:p-4 overflow-auto bg-gray-50">
+												<table className="w-full table-auto rounded-lg overflow-hidden shadow-md text-xs sm:text-sm">
 													<thead className="bg-white text-gray-400">
 														<tr>
-															<th className="px-4 py-3 text-left text-sm font-medium">交易哈希</th>
-															<th className="px-4 py-3 text-left text-sm font-medium">时间</th>
-															<th className="px-4 py-3 text-left text-sm font-medium">代币</th>
-															<th className="px-4 py-3 text-left text-sm font-medium">转入</th>
-															<th className="px-4 py-3 text-left text-sm font-medium">转出</th>
-															<th className="px-4 py-3 text-left text-sm font-medium">状态</th>
+															<th className="px-2 sm:px-4 py-2 sm:py-3 text-left font-medium">交易哈希</th>
+															<th className="px-2 sm:px-4 py-2 sm:py-3 text-left font-medium">时间</th>
+															<th className="px-2 sm:px-4 py-2 sm:py-3 text-left font-medium">代币</th>
+															<th className="px-2 sm:px-4 py-2 sm:py-3 text-left font-medium">转入</th>
+															<th className="px-2 sm:px-4 py-2 sm:py-3 text-left font-medium">转出</th>
+															<th className="px-2 sm:px-4 py-2 sm:py-3 text-left font-medium">状态</th>
 														</tr>
 													</thead>
 													<tbody className="divide-y">
 														{flowData.map((row, transIndex) => (
 															<tr key={transIndex}>
-																<td className="px-4 py-3 text-sm">
+																<td className="px-2 sm:px-4 py-2 sm:py-3">
 																	{row.hash ? (
 																		<a
 																			href={`https://bscscan.com/tx/${row.hash}`}
 																			target="_blank"
-																			rel="noopener noreferrer"
-																			className="text-yellow-500 hover:underline">
+																		rel="noopener noreferrer"
+																		className="text-yellow-500 hover:underline">
 																			{formatTransactionHash(row.hash)}
 																		</a>
 																	) : (
 																		'–'
 																	)}
 																</td>
-																<td className="px-4 py-3 text-sm">{row.time}</td>
-																<td className="px-4 py-3 text-sm">{row.coin}</td>
-																<td className="px-4 py-3 text-sm text-green-500">{row.inflow}</td>
-																<td className="px-4 py-3 text-sm text-red-500">{row.outflow}</td>
-																<td className="px-4 py-3 text-sm">{row.status}</td>
+																<td className="px-2 sm:px-4 py-2 sm:py-3">{row.time}</td>
+																<td className="px-2 sm:px-4 py-2 sm:py-3">{row.coin}</td>
+																<td className="px-2 sm:px-4 py-2 sm:py-3 text-green-500">{row.inflow}</td>
+																<td className="px-2 sm:px-4 py-2 sm:py-3 text-red-500">{row.outflow}</td>
+																<td className="px-2 sm:px-4 py-2 sm:py-3">{row.status}</td>
 															</tr>
 														))}
 													</tbody>
@@ -435,7 +440,7 @@ export function AlphaWalletQuery() {
 								)
 							})
 						) : (
-							<div className="border rounded-lg text-sm p-5 text-center text-gray-400">未找到该地址下的交易记录</div>
+							<div className="border rounded-lg text-xs sm:text-sm p-3 sm:p-5 text-center text-gray-400">未找到该地址下的交易记录</div>
 						)}
 					</div>
 				</CardContent>
