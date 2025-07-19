@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Search, Settings, TrendingUp, TrendingDown, DollarSign, Zap, ChevronDown } from 'lucide-react'
+import { Search, Settings, TrendingUp, TrendingDown, DollarSign, Zap, ChevronDown, History, Clock, Trash2 } from 'lucide-react'
 import BnApiUtils from '@/utils/bn-api'
 import TransactionUtils from '@/utils/transaction'
 import dayjs from 'dayjs'
@@ -22,6 +22,22 @@ import { formatMoney, formatTokenAmount, formatTransactionHash } from '@/utils/u
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { toast } from 'sonner'
 import { TransactionDay, TodaySummary, Summary, Transaction } from '@/types/bn-alpha'
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from '@/components/ui/popover'
+
+// 历史记录类型
+interface QueryHistory {
+	id: string
+	address: string
+	timestamp: number
+}
+
+// 本地存储键名
+const HISTORY_STORAGE_KEY = 'wallet-query-history'
+const MAX_HISTORY_COUNT = 10
 
 
 export function AlphaWalletQuery() {
@@ -33,6 +49,8 @@ export function AlphaWalletQuery() {
 	const [todaySummary, setTodaySummary] = useState<TodaySummary | null>(null)
 	const [summary, setSummary] = useState<Summary | null>(null)
 	const [openDialog, setOpenDialog] = useState(false)
+	const [queryHistory, setQueryHistory] = useState<QueryHistory[]>([])
+	const [isHistoryOpen, setIsHistoryOpen] = useState(false)
 
 	const todayStr = dayjs().format('YYYY-MM-DD')
 
@@ -42,7 +60,105 @@ export function AlphaWalletQuery() {
 		if (saved) {
 			setFilterTokenAddresses(JSON.parse(saved).join('\n'))
 		}
+		
+		// 加载查询历史记录
+		loadHistory()
 	}, [])
+
+	// 从本地存储加载历史记录
+	const loadHistory = () => {
+		try {
+			const stored = localStorage.getItem(HISTORY_STORAGE_KEY)
+			if (stored) {
+				const history = JSON.parse(stored)
+				setQueryHistory(history)
+			}
+		} catch (error) {
+			console.error('加载历史记录失败:', error)
+		}
+	}
+
+	// 保存历史记录到本地存储
+	const saveHistory = (history: QueryHistory[]) => {
+		try {
+			localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history))
+		} catch (error) {
+			console.error('保存历史记录失败:', error)
+		}
+	}
+
+	// 添加新的查询记录
+	const addToHistory = (address: string) => {
+		if (!address.trim()) return
+
+		const newHistory: QueryHistory = {
+			id: Date.now().toString(),
+			address: address.trim(),
+			timestamp: Date.now(),
+		}
+
+		// 检查是否已存在相同的地址
+		const existingIndex = queryHistory.findIndex(
+			item => item.address.toLowerCase() === address.trim().toLowerCase()
+		)
+
+		let updatedHistory: QueryHistory[]
+		
+		if (existingIndex !== -1) {
+			// 如果已存在，更新现有记录的时间戳并移到顶部
+			updatedHistory = [
+				{ ...queryHistory[existingIndex], timestamp: Date.now() },
+				...queryHistory.filter((_, index) => index !== existingIndex)
+			]
+		} else {
+			// 如果不存在，添加新记录
+			updatedHistory = [newHistory, ...queryHistory]
+			
+			// 限制历史记录数量
+			if (updatedHistory.length > MAX_HISTORY_COUNT) {
+				updatedHistory = updatedHistory.slice(0, MAX_HISTORY_COUNT)
+			}
+		}
+
+		setQueryHistory(updatedHistory)
+		saveHistory(updatedHistory)
+	}
+
+	// 从历史记录中选择地址
+	const selectFromHistory = (history: QueryHistory) => {
+		setWalletAddress(history.address)
+		setIsHistoryOpen(false)
+	}
+
+	// 删除历史记录
+	const deleteHistory = (id: string) => {
+		const updatedHistory = queryHistory.filter(item => item.id !== id)
+		setQueryHistory(updatedHistory)
+		saveHistory(updatedHistory)
+	}
+
+	// 清空所有历史记录
+	const clearAllHistory = () => {
+		setQueryHistory([])
+		localStorage.removeItem(HISTORY_STORAGE_KEY)
+	}
+
+	// 格式化时间
+	const formatTime = (timestamp: number) => {
+		const date = new Date(timestamp)
+		const now = new Date()
+		const diff = now.getTime() - timestamp
+		
+		if (diff < 60000) { // 1分钟内
+			return '刚刚'
+		} else if (diff < 3600000) { // 1小时内
+			return `${Math.floor(diff / 60000)}分钟前`
+		} else if (diff < 86400000) { // 1天内
+			return `${Math.floor(diff / 3600000)}小时前`
+		} else {
+			return date.toLocaleDateString()
+		}
+	}
 
 	useEffect(() => {
 		const summary = getSummaryStats(transactionsData)
@@ -81,6 +197,10 @@ export function AlphaWalletQuery() {
 
 	const handleSearch = async () => {
 		setIsLoading(true)
+		
+		// 添加到历史记录
+		addToHistory(walletAddress)
+		
 		// 过滤地址数组
 		const filterArr = filterTokenAddresses
 			.split('\n')
@@ -184,12 +304,78 @@ export function AlphaWalletQuery() {
 				</CardHeader>
 				<CardContent className="p-2 sm:p-4">
 					<div className="flex space-x-1 sm:space-x-2">
-						<Input
-							placeholder="输入钱包地址"
-							value={walletAddress}
-							onChange={(e) => setWalletAddress(e.target.value)}
-							className="flex-1 text-xs sm:text-base px-2 sm:px-4 py-1 sm:py-2"
-						/>
+						<div className="flex-1 relative">
+							<Input
+								placeholder="输入钱包地址"
+								value={walletAddress}
+								onChange={(e) => setWalletAddress(e.target.value)}
+								className="text-xs sm:text-base px-2 sm:px-4 py-1 sm:py-2 pr-8"
+							/>
+							<Popover open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
+								<PopoverTrigger asChild>
+									<Button
+										variant="ghost"
+										size="sm"
+										className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 hover:bg-gray-100"
+										title="查询历史记录"
+									>
+										<History className="h-3 w-3" />
+									</Button>
+								</PopoverTrigger>
+									<PopoverContent className="w-72 sm:w-80 max-w-[90vw] p-2 mt-2 sm:mt-4 translate-x-2.5 sm:translate-x-0" align="end">
+										<div className="space-y-3 sm:space-y-4">
+											<div className="flex items-center justify-between">
+												<h4 className="font-medium text-xs sm:text-sm">查询历史记录</h4>
+												<Button
+													variant="ghost"
+													size="sm"
+													onClick={clearAllHistory}
+													className="text-red-500 hover:text-red-700 text-xs"
+												>
+													清空
+												</Button>
+											</div>
+											
+											{queryHistory.length === 0 ? (
+												<div className="text-center py-6 sm:py-8 text-muted-foreground">
+													<Clock className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 opacity-50" />
+													<p className="text-xs sm:text-sm">暂无查询记录</p>
+												</div>
+											) : (
+												<div className="space-y-1.5 sm:space-y-2 max-h-48 sm:max-h-60 overflow-y-auto">
+													{queryHistory.map((item) => (
+														<div
+															key={item.id}
+															className="flex items-center justify-between p-1.5 sm:p-2 border rounded-lg hover:bg-gray-50 cursor-pointer group"
+															onClick={() => selectFromHistory(item)}
+														>
+															<div className="flex-1 min-w-0">
+																<div className="text-xs sm:text-sm font-medium truncate">
+																	{item.address}
+																</div>
+																<div className="text-xs text-muted-foreground">
+																	{formatTime(item.timestamp)}
+																</div>
+															</div>
+															<Button
+																variant="ghost"
+																size="sm"
+																onClick={(e) => {
+																	e.stopPropagation()
+																	deleteHistory(item.id)
+																}}
+																className="opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-700 h-5 w-5 sm:h-6 sm:w-6 p-0"
+															>
+																<Trash2 className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+															</Button>
+														</div>
+													))}
+												</div>
+											)}
+										</div>
+									</PopoverContent>
+								</Popover>
+						</div>
 						<Button onClick={handleSearch} disabled={isLoading || !walletAddress} className="px-2 py-1 text-xs sm:text-sm md:px-4 md:py-2 md:text-base">
 							<Search className="mr-1 sm:mr-2 h-4 w-4" />
 							{isLoading ? '查询中...' : '查询'}
