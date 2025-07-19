@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import { createServerApi } from '@/lib/api';
 
-const httpsAgent = new HttpsProxyAgent(process.env.HTTP_PROXY || "");
+const httpsAgent = process.env.HTTP_PROXY ? new HttpsProxyAgent(process.env.HTTP_PROXY) : null;
 
 export async function GET(request: NextRequest) {
   try {
@@ -30,11 +30,17 @@ export async function GET(request: NextRequest) {
       'Connection': 'keep-alive',
       'Cache-Control': 'no-cache',
     }
-    const response = await api.get(binanceUrl, {
+
+    const requestConfig: any = {
       headers,
-      httpsAgent,
-      httpAgent: httpsAgent,
-    })
+    }
+    
+    if (httpsAgent) {
+      requestConfig.httpsAgent = httpsAgent
+      requestConfig.httpAgent = httpsAgent
+    }
+    
+    const response = await api.get(binanceUrl, requestConfig)
 
     if (response.status !== 200) {
       throw new Error(`Binance API responded with status: ${response.status}`)

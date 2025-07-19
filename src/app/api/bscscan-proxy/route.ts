@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import { createServerApi } from '@/lib/api';
 
-const httpsAgent = new HttpsProxyAgent(process.env.HTTP_PROXY || "");
+const httpsAgent = process.env.HTTP_PROXY ? new HttpsProxyAgent(process.env.HTTP_PROXY) : null;
 
 
 export async function GET(request: NextRequest) {
@@ -43,11 +43,17 @@ export async function GET(request: NextRequest) {
     }
 
     // 发起请求到 BSC Scan API
-    const response = await api.get(bscScanUrl, {
+    const requestConfig: any = {
       headers,
-      httpsAgent,
-      httpAgent: httpsAgent,
-    })
+    }
+    
+    // 只有当代理存在时才添加到请求配置中
+    if (httpsAgent) {
+      requestConfig.httpsAgent = httpsAgent
+      requestConfig.httpAgent = httpsAgent
+    }
+    
+    const response = await api.get(bscScanUrl, requestConfig)
 
     if (response.status !== 200) {
       throw new Error(`BSC Scan API responded with status: ${response.status}`)
