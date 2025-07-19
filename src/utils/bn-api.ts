@@ -4,8 +4,8 @@ import TransactionUtils from './transaction'
  * API相关工具函数 (TypeScript重写)
  */
 export default class BnApiUtils {
-	static BSC_SCAN_API_URL = 'https://api.bscscan.com/api'
-	static BINANCE_API_URL = 'https://api.binance.com/api/v3/ticker/price'
+	static BSC_SCAN_API_URL = '/api/bscscan-proxy'
+	static BINANCE_API_URL = '/api/binance-proxy'
 	static TARGET_CONTRACT = '0xb300000b72DEAEb607a12d5f54773D1C19c7028d'.toLowerCase()
 
 	static priceCache: Map<string, number> = new Map()
@@ -20,28 +20,40 @@ export default class BnApiUtils {
 	}
 
 	/**
-	 * 从BSCScan API获取交易
+	 * 从BSCScan API获取交易（通过代理）
 	 */
 	static async fetchTransactions(address: string, action: string, apiKey?: string): Promise<any[]> {
-		const key = apiKey || process.env.NEXT_PUBLIC_BSC_SCAN_API_KEY
-		while (true) {
-			try {
-				const url = `${this.BSC_SCAN_API_URL}?module=account&action=${action}&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${key}`
-				const response = await fetch(url)
-				const data = await response.json()
-				if (data.status === '1') {
-					return data.result || []
-				} else if (data.status === '0' && data.message === 'No transactions found') {
-					return []
-				} else if (data.status === '0' && data.message == 'NOTOK') {
-					console.log(address, action, data)
-					console.warn(`获取${action}时API返回错误:`, data.message)
-					return []
-				}
-			} catch (error) {
-				console.error(`获取${action}时出错:`, error)
-				throw new Error(`获取${action}数据失败`)
+		try {
+			const url = `${this.BSC_SCAN_API_URL}?action=${action}&address=${address}`
+			const response = await fetch(url, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			})
+			
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`)
 			}
+			
+			const data = await response.json()
+			
+			// 检查代理 API 是否返回错误
+			if (data.error) {
+				throw new Error(data.error)
+			}
+			
+			if (data.status === '1') {
+				return data.result || []
+			} else if (data.status === '0' && data.message === 'No transactions found') {
+				return []
+			} else {
+				console.warn(`获取${action}时API返回错误:`, data.message)
+				return []
+			}
+		} catch (error) {
+			console.error(`获取${action}时出错:`, error)
+			throw new Error(`获取${action}数据失败`)
 		}
 	}
 
@@ -106,12 +118,27 @@ export default class BnApiUtils {
 			} else if (symbol.toUpperCase() === 'BTC') {
 				tradingPair = 'BTCUSDT'
 			}
+			
+			// 使用代理 API
 			const url = `${this.BINANCE_API_URL}?symbol=${tradingPair}`
-			const response = await fetch(url)
+			const response = await fetch(url, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			})
+			
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`)
 			}
+			
 			const data = await response.json()
+			
+			// 检查代理 API 是否返回错误
+			if (data.error) {
+				throw new Error(data.error)
+			}
+			
 			if (data.price) {
 				const price = parseFloat(data.price)
 				this.priceCache.set(cacheKey, price)
@@ -129,31 +156,83 @@ export default class BnApiUtils {
 	}
 
 	/**
-	 * 批量获取代币价格
+	 * 批量获取代币价格（使用代理 API）
 	 */
 	static async fetchMultipleTokenPrices(symbols: string[]): Promise<Record<string, number>> {
 		const priceMap: Record<string, number> = {}
 		const uniqueSymbols = [...new Set(symbols)]
-		const BATCH_SIZE = 5
-		for (let i = 0; i < uniqueSymbols.length; i += BATCH_SIZE) {
-			const batch = uniqueSymbols.slice(i, i + BATCH_SIZE)
-			const pricePromises = batch.map(async (symbol) => {
-				try {
-					const price = await this.fetchTokenPrice(symbol)
-					return { symbol, price }
-				} catch (error) {
-					console.warn(`获取 ${symbol} 价格失败:`, error)
-					return { symbol, price: 0 }
+		
+		try {
+			// 使用批量代理 API
+			const response = await fetch('/api/binance-proxy/batch', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ symbols: uniqueSymbols }),
+			})
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`)
+			}
+
+			const data = await response.json()
+			
+			if (data.error) {
+				throw new Error(data.error)
+			}
+
+			// 处理结果
+			Object.entries(data.results).forEach(([symbol, result]: [string, any]) => {
+				if (result && result.price) {
+					priceMap[symbol] = parseFloat(result.price)
+				} else {
+					priceMap[symbol] = 0
 				}
 			})
-			const results = await Promise.all(pricePromises)
-			results.forEach(({ symbol, price }) => {
-				priceMap[symbol] = price
+
+			// 处理本地价格代币
+			uniqueSymbols.forEach(symbol => {
+				if (!priceMap[symbol]) {
+					const localPriceTokens = ['USDC', 'BSC-USD', 'USDT']
+					if (localPriceTokens.includes(symbol.toUpperCase())) {
+						priceMap[symbol] = parseFloat(this.defaultPrices[symbol.toUpperCase()] || '1')
+					} else {
+						priceMap[symbol] = 0
+					}
+				}
 			})
-			if (i + BATCH_SIZE < uniqueSymbols.length) {
-				await new Promise((resolve) => setTimeout(resolve, 100))
+
+			if (data.errors && data.errors.length > 0) {
+				console.warn('批量获取价格时出现错误:', data.errors)
+			}
+
+		} catch (error) {
+			console.warn('批量获取价格失败，回退到单个获取:', error)
+			
+			// 回退到原来的单个获取方法
+			const BATCH_SIZE = 5
+			for (let i = 0; i < uniqueSymbols.length; i += BATCH_SIZE) {
+				const batch = uniqueSymbols.slice(i, i + BATCH_SIZE)
+				const pricePromises = batch.map(async (symbol) => {
+					try {
+						const price = await this.fetchTokenPrice(symbol)
+						return { symbol, price }
+					} catch (error) {
+						console.warn(`获取 ${symbol} 价格失败:`, error)
+						return { symbol, price: 0 }
+					}
+				})
+				const results = await Promise.all(pricePromises)
+				results.forEach(({ symbol, price }) => {
+					priceMap[symbol] = price
+				})
+				if (i + BATCH_SIZE < uniqueSymbols.length) {
+					await new Promise((resolve) => setTimeout(resolve, 100))
+				}
 			}
 		}
+		
 		return priceMap
 	}
 
@@ -162,9 +241,9 @@ export default class BnApiUtils {
 	 */
 	static async fetchAddressData(address: string, apiKey?: string): Promise<any[]> {
 		try {
-			const normalTxList = await this.fetchTransactions(address, 'txlist', apiKey)
-			const internalTxList = await this.fetchTransactions(address, 'txlistinternal', apiKey)
-			const tokenTxList = await this.fetchTransactions(address, 'tokentx', apiKey)
+			const normalTxList = await this.fetchTransactions(address, 'txlist')
+			const internalTxList = await this.fetchTransactions(address, 'txlistinternal')
+			const tokenTxList = await this.fetchTransactions(address, 'tokentx')
 			const allTransactions = TransactionUtils.processTransactions(address, normalTxList, internalTxList, tokenTxList)
 			// 筛选与目标合约的交易
 			const filteredTransactions = allTransactions.filter(
