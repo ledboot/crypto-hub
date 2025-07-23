@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Search, Settings, TrendingUp, TrendingDown, DollarSign, Zap, ChevronDown, History, Clock, Trash2 } from 'lucide-react'
+import { Search, Settings, TrendingUp, TrendingDown, DollarSign, Zap, ChevronDown, History, Clock, Trash2, Calculator } from 'lucide-react'
 import BnApiUtils from '@/utils/bn-api'
 import TransactionUtils from '@/utils/transaction'
 import dayjs from 'dayjs'
@@ -51,6 +51,8 @@ export function AlphaWalletQuery() {
 	const [openDialog, setOpenDialog] = useState(false)
 	const [queryHistory, setQueryHistory] = useState<QueryHistory[]>([])
 	const [isHistoryOpen, setIsHistoryOpen] = useState(false)
+	const [showCalculator, setShowCalculator] = useState(false)
+	const [pointValue, setPointValue] = useState(10)
 
 	const todayStr = dayjs().format('YYYY-MM-DD')
 
@@ -297,7 +299,8 @@ export function AlphaWalletQuery() {
 	return (
 		<div className="container mx-auto space-y-4 sm:space-y-6 py-10 sm:py-20 px-2 sm:px-4 md:px-10">
 			{/* Wallet Address Input */}
-			<Card className="p-2 sm:p-4">
+			<div className="flex flex-col sm:flex-row gap-2">
+			<Card className="p-2 sm:p-4 w-full">
 				<CardHeader className="p-2 sm:p-4">
 					<CardTitle className="text-base sm:text-xl">钱包地址查询</CardTitle>
 					<CardDescription className="text-xs sm:text-sm">输入钱包地址查看交易统计</CardDescription>
@@ -413,9 +416,40 @@ export function AlphaWalletQuery() {
 								</div>
 							</DialogContent>
 						</Dialog>
+						<Button className="px-2 py-1 text-xs sm:text-sm md:px-4 md:py-2 md:text-base" onClick={() => setShowCalculator(v => !v)}>
+							<Calculator className="mr-1 sm:mr-2 h-4 w-4" />
+							<span className="sm:inline">计算器</span>
+						</Button>
 					</div>
 				</CardContent>
 			</Card>
+			{/* 积分计算器Card */}
+			{showCalculator && (
+			<Card className='w-full sm:w-[350px]'>
+				<CardHeader>
+					<CardTitle>积分计算器</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<div className="flex flex-col gap-4 items-start">
+						<div className="w-full flex flex-col items-start">
+							<label htmlFor="point-range" className="mb-2 text-sm">积分：<span className="font-bold text-lg text-blue-600">{pointValue}</span></label>
+							<input
+								type="range"
+								id="point-range"
+								min={1}
+								max={30}
+								value={pointValue}
+								onChange={e => setPointValue(Number(e.target.value))}
+								className="w-full max-w-xs"
+							/>
+						</div>
+						<div className="text-sm mt-2">所需交易量：<span className="font-bold text-lg text-green-600">${Math.pow(2, pointValue).toLocaleString()}</span></div>
+					</div>
+				</CardContent>
+			</Card>
+			)}
+			</div>
+
 
 			{/* Summary Cards */}
 			<div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
