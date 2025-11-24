@@ -5,6 +5,25 @@ import { Footer } from "@/components/footer";
 import { Toaster } from "sonner";
 
 
+import localFont from "next/font/local";
+
+const openSans = localFont({
+  src: [
+    {
+      path: "./fonts/OpenSans-VariableFont.ttf",
+      weight: "300 800",
+      style: "normal",
+    },
+    {
+      path: "./fonts/OpenSans-Italic-VariableFont.ttf",
+      weight: "300 800",
+      style: "italic",
+    },
+  ],
+  variable: "--font-open-sans",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "CryptoHubs",
   description: "A hub for all your crypto needs",
@@ -57,7 +76,7 @@ export default function RootLayout({
           })(window,document,'script','dataLayer','GTM-TQGDS2SZ');`}
         </script>
       </head>
-      <body className={`font-sans flex flex-col min-h-screen`}>
+      <body className={`${openSans.variable} font-sans flex flex-col min-h-screen`}>
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TQGDS2SZ"
         height="0" width="0" style={{display: 'none', visibility: 'hidden'}}></iframe></noscript>
         <Toaster position="bottom-right" richColors />
