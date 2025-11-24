@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@across-protocol/sdk": "^4.1.29",
+    "@faker-js/faker": "^10.1.0",
     "@noble/hashes": "^1.7.1",
     "@noble/secp256k1": "^2.2.3",
     "@radix-ui/react-checkbox": "^1.1.4",

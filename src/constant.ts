@@ -38,6 +38,19 @@ export const MenuItems = [
       },
     ],
   },
+  {
+    title: "Polymarket",
+    items: [
+      {
+        title: "Traders",
+        href: "/polymarket/traders",
+      },
+      {
+        title: "Markets",
+        href: "/polymarket/markets",
+      },
+    ],
+  },
 ];
 
 export const SupportedChains = [
