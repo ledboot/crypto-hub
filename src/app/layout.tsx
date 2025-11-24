@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import { MainNav } from "@/components/main-nav";
 import { Footer } from "@/components/footer";
 import { Toaster } from "sonner";
-
-const inter = Inter({ subsets: ["latin"] });
 
 
 export const metadata: Metadata = {
@@ -60,7 +57,7 @@ export default function RootLayout({
           })(window,document,'script','dataLayer','GTM-TQGDS2SZ');`}
         </script>
       </head>
-      <body className={`${inter.className} flex flex-col min-h-screen`}>
+      <body className={`font-sans flex flex-col min-h-screen`}>
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TQGDS2SZ"
         height="0" width="0" style={{display: 'none', visibility: 'hidden'}}></iframe></noscript>
         <Toaster position="bottom-right" richColors />

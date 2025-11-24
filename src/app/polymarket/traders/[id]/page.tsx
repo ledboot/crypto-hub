@@ -1,46 +1,27 @@
-'use client';
+import { Metadata } from 'next';
+import { TraderProfile } from '@/components/polymarket/trader-profile';
 
-import { TraderDetails } from "@/components/polymarket/trader-details";
-import { generateTraders } from "@/lib/mock-polymarket";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
-import { useRouter, useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Trader } from "@/lib/mock-polymarket";
+type Props = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
-export default function TraderDetailsPage() {
-  const router = useRouter();
-  const params = useParams();
-  const [trader, setTrader] = useState<Trader | null>(null);
+export async function generateMetadata(
+  { params }: Props,
+): Promise<Metadata> {
+  const id = (await params).id;
 
-  useEffect(() => {
-    // In a real app, we would fetch by ID. 
-    // Here we generate a random trader but ensure the ID matches if we were using a real store.
-    // For demo purposes, we just generate one consistent looking trader.
-    const mockTraders = generateTraders(1);
-    const mockTrader = mockTraders[0];
-    if (params.id) {
-        mockTrader.id = params.id as string;
-    }
-    setTrader(mockTrader);
-  }, [params.id]);
+  return {
+    title: `Trader ${id} Profile | Polymarket | CryptoHub`,
+    description: `View detailed trading statistics, PnL history, and positions for trader ${id} on Polymarket.`,
+    openGraph: {
+      title: `Trader ${id} Profile | Polymarket | CryptoHub`,
+      description: `View detailed trading statistics, PnL history, and positions for trader ${id} on Polymarket.`,
+    },
+  };
+}
 
-  if (!trader) {
-    return <div className="container mx-auto py-8">Loading...</div>;
-  }
-
-  return (
-    <div className="container mx-auto py-8">
-      <Button 
-        variant="ghost" 
-        className="mb-6 pl-0 hover:pl-2 transition-all" 
-        onClick={() => router.back()}
-      >
-        <ChevronLeft className="h-4 w-4 mr-2" />
-        Back to Leaderboard
-      </Button>
-
-      <TraderDetails trader={trader} />
-    </div>
-  );
+export default async function TraderDetailsPage({ params }: Props) {
+  const id = (await params).id;
+  return <TraderProfile id={id} />;
 }
