@@ -1,5 +1,11 @@
 node_modules
 .next
 .vscode
+<<<<<<< Updated upstream
 .env
 .DS_Store
+=======
+.env*
+.DS_Store
+*.tsbuildinfo
+>>>>>>> Stashed changes
