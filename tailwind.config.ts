@@ -10,7 +10,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-open-sans)', 'sans-serif'],
+        sans: ['Inter', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', 'sans-serif'],
       },
       colors: {
         background: 'hsl(var(--background))',
