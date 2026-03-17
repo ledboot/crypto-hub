@@ -8,6 +8,7 @@ import { format } from 'date-fns'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Search, Loader2, TrendingUp, Flame, Globe, Landmark, Trophy, Cpu, Film, Sparkles } from 'lucide-react'
+import { useI18n } from '@/components/i18n-provider'
 
 export interface Market {
 	id: string
@@ -32,19 +33,26 @@ interface EventsResponse {
 
 // Category definitions with icons
 const CATEGORIES = [
-	{ id: 'all', label: 'All', icon: Sparkles, slug: '' },
-	{ id: 'trending', label: 'Trending', icon: Flame, slug: '' },
-	{ id: 'politics', label: 'Politics', icon: Landmark, slug: 'politics' },
-	{ id: 'sports', label: 'Sports', icon: Trophy, slug: 'sports' },
-	{ id: 'crypto', label: 'Crypto', icon: TrendingUp, slug: 'crypto' },
-	{ id: 'science', label: 'Science', icon: Cpu, slug: 'science' },
-	{ id: 'entertainment', label: 'Entertainment', icon: Film, slug: 'entertainment' },
-	{ id: 'world', label: 'World', icon: Globe, slug: 'world' },
+	{ id: 'all', labelKey: 'polymarket.category.all', label: 'All', icon: Sparkles, slug: '' },
+	{ id: 'trending', labelKey: 'polymarket.category.trending', label: 'Trending', icon: Flame, slug: '' },
+	{ id: 'politics', labelKey: 'polymarket.category.politics', label: 'Politics', icon: Landmark, slug: 'politics' },
+	{ id: 'sports', labelKey: 'polymarket.category.sports', label: 'Sports', icon: Trophy, slug: 'sports' },
+	{ id: 'crypto', labelKey: 'polymarket.category.crypto', label: 'Crypto', icon: TrendingUp, slug: 'crypto' },
+	{ id: 'science', labelKey: 'polymarket.category.science', label: 'Science', icon: Cpu, slug: 'science' },
+	{
+		id: 'entertainment',
+		labelKey: 'polymarket.category.entertainment',
+		label: 'Entertainment',
+		icon: Film,
+		slug: 'entertainment',
+	},
+	{ id: 'world', labelKey: 'polymarket.category.world', label: 'World', icon: Globe, slug: 'world' },
 ]
 
 const PAGE_SIZE = 20
 
 export function MarketsExplorer() {
+	const { t } = useI18n()
 	const [events, setEvents] = useState<Market[]>([])
 	const [loading, setLoading] = useState(true)
 	const [loadingMore, setLoadingMore] = useState(false)
@@ -152,7 +160,7 @@ export function MarketsExplorer() {
 			<div className="relative max-w-md">
 				<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 				<Input
-					placeholder="Search events..."
+					placeholder={t('polymarket.markets.search', 'Search events...')}
 					value={searchQuery}
 					onChange={(e) => setSearchQuery(e.target.value)}
 					className="pl-10"
@@ -179,7 +187,7 @@ export function MarketsExplorer() {
               `}
 						>
 							<Icon className="h-4 w-4" />
-							{category.label}
+							{t(category.labelKey, category.label)}
 						</button>
 					)
 				})}
@@ -197,8 +205,8 @@ export function MarketsExplorer() {
 				<>
 					{events.length === 0 ? (
 						<div className="text-center py-20 text-muted-foreground">
-							<p className="text-lg">No events found</p>
-							<p className="text-sm mt-2">Try adjusting your search or filters</p>
+							<p className="text-lg">{t('polymarket.markets.empty', 'No events found')}</p>
+							<p className="text-sm mt-2">{t('polymarket.markets.emptyTip', 'Try adjusting your search or filters')}</p>
 						</div>
 					) : (
 						<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -211,7 +219,9 @@ export function MarketsExplorer() {
 					{/* Load More Trigger */}
 					<div ref={loaderRef} className="h-20 flex items-center justify-center">
 						{loadingMore && <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />}
-						{!hasMore && events.length > 0 && <p className="text-sm text-muted-foreground">No more events</p>}
+						{!hasMore && events.length > 0 && (
+							<p className="text-sm text-muted-foreground">{t('polymarket.markets.noMore', 'No more events')}</p>
+						)}
 					</div>
 				</>
 			)}
@@ -221,6 +231,8 @@ export function MarketsExplorer() {
 
 // Compact Event Card Component
 function EventCard({ event, formatCurrency }: { event: Market; formatCurrency: (value: number) => string }) {
+	const { t } = useI18n()
+
 	return (
 		<Link href={`https://polymarket.com/event/${event.slug}`} target="_blank">
 			<Card className="h-full hover:shadow-lg hover:border-primary/50 transition-all duration-200 cursor-pointer flex flex-col overflow-hidden group">
@@ -235,7 +247,9 @@ function EventCard({ event, formatCurrency }: { event: Market; formatCurrency: (
 							sizes="(max-width: 768px) 50vw, 25vw"
 						/>
 					) : (
-						<div className="flex items-center justify-center h-full text-muted-foreground text-xs">No Image</div>
+						<div className="flex items-center justify-center h-full text-muted-foreground text-xs">
+							{t('polymarket.markets.noImage', 'No Image')}
+						</div>
 					)}
 					{event.icon && (
 						<div className="absolute -bottom-3 left-3 h-8 w-8 rounded-full border-2 border-background bg-background overflow-hidden shadow-sm">
@@ -264,13 +278,13 @@ function EventCard({ event, formatCurrency }: { event: Market; formatCurrency: (
 				<CardFooter className="flex justify-between items-center border-t pt-2 pb-2 px-3 bg-muted/20 text-[10px] text-muted-foreground">
 					<div className="flex flex-col">
 						<span className="font-semibold text-foreground text-xs">{formatCurrency(event.volume)}</span>
-						<span>Vol</span>
+						<span>{t('polymarket.markets.volumeShort', 'Vol')}</span>
 					</div>
 					<div className="flex flex-col items-end">
 						<span className="font-semibold text-foreground text-xs">
 							{event.endDate ? format(new Date(event.endDate), 'MMM d') : 'N/A'}
 						</span>
-						<span>Ends</span>
+						<span>{t('polymarket.profile.ends', 'Ends')}</span>
 					</div>
 				</CardFooter>
 			</Card>

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Star, ExternalLink, TrendingUp, TrendingDown, Wallet, BarChart3, DollarSign, Activity } from 'lucide-react'
 import { useState } from 'react'
 import { format } from 'date-fns'
+import { useI18n } from '@/components/i18n-provider'
 
 export interface TraderProfile {
 	address: string
@@ -41,6 +42,7 @@ interface TraderDetailsProps {
 
 export function TraderDetails({ profile, positions }: TraderDetailsProps) {
 	const [isFavorite, setIsFavorite] = useState(false)
+	const { t } = useI18n()
 
 	const formatCurrency = (value: number) => {
 		return new Intl.NumberFormat('en-US', {
@@ -92,7 +94,9 @@ export function TraderDetails({ profile, positions }: TraderDetailsProps) {
 						className="gap-2"
 					>
 						<Star className={`h-4 w-4 ${isFavorite ? 'fill-primary-foreground' : ''}`} />
-						{isFavorite ? 'Favorited' : 'Favorite'}
+						{isFavorite
+							? t('polymarket.profile.favorited', 'Favorited')
+							: t('polymarket.profile.favorite', 'Favorite')}
 					</Button>
 					<Button
 						variant="outline"
@@ -100,7 +104,7 @@ export function TraderDetails({ profile, positions }: TraderDetailsProps) {
 						className="gap-2"
 					>
 						<ExternalLink className="h-4 w-4" />
-						View on Polymarket
+						{t('polymarket.profile.viewOnPolymarket', 'View on Polymarket')}
 					</Button>
 				</div>
 			</div>
@@ -111,7 +115,7 @@ export function TraderDetails({ profile, positions }: TraderDetailsProps) {
 					<CardHeader className="pb-2">
 						<CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
 							<DollarSign className="h-4 w-4" />
-							Total Volume
+							{t('polymarket.profile.stat.volume', 'Total Volume')}
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
@@ -122,7 +126,7 @@ export function TraderDetails({ profile, positions }: TraderDetailsProps) {
 					<CardHeader className="pb-2">
 						<CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
 							<TrendingUp className="h-4 w-4" />
-							Total PnL
+							{t('polymarket.profile.stat.pnl', 'Total PnL')}
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
@@ -138,19 +142,21 @@ export function TraderDetails({ profile, positions }: TraderDetailsProps) {
 					<CardHeader className="pb-2">
 						<CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
 							<Wallet className="h-4 w-4" />
-							Position Value
+							{t('polymarket.profile.stat.positionValue', 'Position Value')}
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<div className="text-2xl font-bold">{formatCurrency(profile.positionsValue)}</div>
-						<p className="text-xs text-muted-foreground mt-1">{profile.positions} positions</p>
+						<p className="text-xs text-muted-foreground mt-1">
+							{profile.positions} {t('polymarket.profile.stat.positions', 'positions')}
+						</p>
 					</CardContent>
 				</Card>
 				<Card>
 					<CardHeader className="pb-2">
 						<CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
 							<BarChart3 className="h-4 w-4" />
-							Markets Traded
+							{t('polymarket.profile.stat.markets', 'Markets Traded')}
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
@@ -164,13 +170,13 @@ export function TraderDetails({ profile, positions }: TraderDetailsProps) {
 				<CardHeader>
 					<CardTitle className="flex items-center gap-2">
 						<Activity className="h-5 w-5" />
-						Active Positions ({positions.length})
+						{t('polymarket.profile.positions', 'Active Positions')} ({positions.length})
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
 					{positions.length === 0 ? (
 						<div className="text-center py-8 text-muted-foreground">
-							<p>No active positions</p>
+							<p>{t('polymarket.profile.positions.empty', 'No active positions')}</p>
 						</div>
 					) : (
 						<div className="space-y-4">
@@ -192,7 +198,7 @@ export function TraderDetails({ profile, positions }: TraderDetailsProps) {
 										</div>
 										{position.market.endDate && (
 											<span className="text-xs text-muted-foreground mt-1">
-												Ends {format(new Date(position.market.endDate), 'MMM d, yyyy')}
+												{t('polymarket.profile.ends', 'Ends')} {format(new Date(position.market.endDate), 'MMM d, yyyy')}
 											</span>
 										)}
 									</div>
@@ -201,7 +207,7 @@ export function TraderDetails({ profile, positions }: TraderDetailsProps) {
 											{formatPnL(position.pnl)}
 										</span>
 										<span className="text-xs text-muted-foreground">
-											Current: {(position.currentPrice * 100).toFixed(1)}¢
+											{t('polymarket.profile.current', 'Current')}: {(position.currentPrice * 100).toFixed(1)}¢
 										</span>
 									</div>
 								</div>
@@ -212,7 +218,7 @@ export function TraderDetails({ profile, positions }: TraderDetailsProps) {
 										variant="outline"
 										onClick={() => window.open(`https://polymarket.com/profile/${profile.address}`, '_blank')}
 									>
-										View all {positions.length} positions on Polymarket
+										{t('polymarket.profile.viewAllPositions', 'View all positions on Polymarket')} ({positions.length})
 									</Button>
 								</div>
 							)}

@@ -1,20 +1,38 @@
-export const MenuItems = [
+export interface MenuSubItem {
+  key: string;
+  title: string;
+  href: string;
+}
+
+export interface MenuItem {
+  key: string;
+  title: string;
+  items?: MenuSubItem[];
+  href?: string;
+}
+
+export const MenuItems: MenuItem[] = [
   {
+    key: "nav.tools",
     title: "实用工具",
     items: [
       {
+        key: "nav.tools.batchQuery",
         title: "批量查询地址余额",
         href: "/tools/batch-query",
       },
       {
+        key: "nav.tools.transferOneToMany",
         title: "批量转账(一对多)",
         href: "",
       },
       {
+        key: "nav.tools.transferManyToOne",
         title: "批量转账(多对一)",
         href: "",
       },
       {
+        key: "nav.tools.hdWallet",
         title: "HD Wallet 生成器",
         href: "/tools/hd-wallet",
       },
@@ -26,15 +44,34 @@ export const MenuItems = [
   //   href: "/tools/cross-chain-bridge",
   // },
   {
+    key: "nav.binanceAlpha",
     title: "Binance Alpha",
     items: [
       {
+        key: "nav.binanceAlpha.tradingStats",
         title: "交易统计",
         href: "/binance-alpha/trading-statistics",
       },
       {
+        key: "nav.binanceAlpha.walletQuery",
         title: "钱包查询",
         href: "/binance-alpha/wallet-query",
+      },
+    ],
+  },
+  {
+    key: "nav.polymarket",
+    title: "Polymarket",
+    items: [
+      {
+        key: "nav.polymarket.markets",
+        title: "市场浏览",
+        href: "/polymarket/markets",
+      },
+      {
+        key: "nav.polymarket.traders",
+        title: "交易员排行榜",
+        href: "/polymarket/traders",
       },
     ],
   },

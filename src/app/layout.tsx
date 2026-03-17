@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import { MainNav } from "@/components/main-nav";
 import { Footer } from "@/components/footer";
 import { Toaster } from "sonner";
+import { I18nProvider } from "@/components/i18n-provider";
 
 
 export const metadata: Metadata = {
@@ -46,7 +47,7 @@ export default function RootLayout({
 }>) {
  
   return (
-    <html lang="en">
+    <html lang="zh-CN">
       <head>
         <meta name="google-adsense-account" content="ca-pub-3198470578962995"/>
         <script>
@@ -60,10 +61,12 @@ export default function RootLayout({
       <body className="flex flex-col min-h-screen">
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TQGDS2SZ"
         height="0" width="0" style={{display: 'none', visibility: 'hidden'}}></iframe></noscript>
-        <Toaster position="bottom-right" richColors />
-        <MainNav />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <I18nProvider>
+          <Toaster position="bottom-right" richColors />
+          <MainNav />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </I18nProvider>
       </body>
     </html>
   );

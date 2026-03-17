@@ -16,9 +16,16 @@ import { Button } from '@/components/ui/button'
 import { MenuItems } from '@/constant'
 import Image from 'next/image'
 import { useState } from 'react'
+import { useI18n } from '@/components/i18n-provider'
+import type { Locale } from '@/lib/i18n'
 
 export function MainNav() {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+	const { t, locale, setLocale } = useI18n()
+
+	const setLanguage = (nextLocale: Locale) => {
+		setLocale(nextLocale)
+	}
 
 	return (
 		<header className="border-b">
@@ -31,21 +38,21 @@ export function MainNav() {
 					<NavigationMenu viewport={false}>
 						<NavigationMenuList>
 							{MenuItems.map((item) => (
-								<NavigationMenuItem key={item.title}>
+								<NavigationMenuItem key={item.key}>
 									{item.items ? (
 										<>
 											<NavigationMenuTrigger className="text-base hover:text-sky-900">
-												{item.title}
+												{t(item.key, item.title)}
 											</NavigationMenuTrigger>
 											<NavigationMenuContent className="p-0">
 												<ul className="w-[200px] p-2">
 													{item.items.map((subItem) => (
-														<li key={subItem.title} className="text-sm">
+														<li key={subItem.key} className="text-sm">
 															<NavigationMenuLink asChild>
 																<Link
 																	href={subItem.href}
 																	className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-																	{subItem.title}
+																	{t(subItem.key, subItem.title)}
 																</Link>
 															</NavigationMenuLink>
 														</li>
@@ -55,7 +62,9 @@ export function MainNav() {
 										</>
 									) : (
 										<Link href={item.href || '#'} legacyBehavior passHref>
-											<NavigationMenuLink className={navigationMenuTriggerStyle()}>{item.title}</NavigationMenuLink>
+											<NavigationMenuLink className={navigationMenuTriggerStyle()}>
+												{t(item.key, item.title)}
+											</NavigationMenuLink>
 										</Link>
 									)}
 								</NavigationMenuItem>
@@ -69,14 +78,32 @@ export function MainNav() {
 					size="icon"
 					className="ml-2 md:hidden"
 					onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-					aria-label="打开菜单">
+					aria-label={t('nav.menu.open', 'Open menu')}>
 					<Menu className="w-6 h-6" />
 				</Button>
 				{/* 桌面端搜索和github */}
 				<div className="ml-auto flex items-center space-x-4">
 					<div className="relative hidden md:block">
 						<Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-						<Input type="search" placeholder="输入搜索内容" className="w-64 pl-9" />
+						<Input type="search" placeholder={t('nav.searchPlaceholder', 'Search')} className="w-64 pl-9" />
+					</div>
+					<div className="hidden md:flex items-center gap-1 rounded-md border p-1">
+						<Button
+							variant={locale === 'zh' ? 'default' : 'ghost'}
+							size="sm"
+							className="h-7 px-2"
+							onClick={() => setLanguage('zh')}
+						>
+							{t('nav.lang.zh', '中文')}
+						</Button>
+						<Button
+							variant={locale === 'en' ? 'default' : 'ghost'}
+							size="sm"
+							className="h-7 px-2"
+							onClick={() => setLanguage('en')}
+						>
+							{t('nav.lang.en', 'English')}
+						</Button>
 					</div>
 					<div className="hidden md:block">
 						<Link href="https://github.com/ledboot/crypto-hub" target="_blank" rel="noopener noreferrer">
@@ -100,25 +127,25 @@ export function MainNav() {
 								size="icon"
 								className="ml-auto"
 								onClick={() => setMobileMenuOpen(false)}
-								aria-label="关闭菜单">
+								aria-label={t('nav.menu.close', 'Close menu')}>
 								<X className="w-6 h-6" />
 							</Button>
 						</div>
 						<nav>
 							<ul className="space-y-2">
 								{MenuItems.map((item) => (
-									<li key={item.title}>
+									<li key={item.key}>
 										{item.items ? (
 											<>
-												<div className="font-semibold mb-1">{item.title}</div>
+												<div className="font-semibold mb-1">{t(item.key, item.title)}</div>
 												<ul className="pl-2 space-y-1">
 													{item.items.map((subItem) => (
-														<li key={subItem.title}>
+														<li key={subItem.key}>
 															<Link
 																href={subItem.href}
 																className="block py-1 px-2 rounded hover:bg-accent"
 																onClick={() => setMobileMenuOpen(false)}>
-																{subItem.title}
+																{t(subItem.key, subItem.title)}
 															</Link>
 														</li>
 													))}
@@ -129,7 +156,7 @@ export function MainNav() {
 												href={item.href || '#'}
 												className="block py-1 px-2 rounded hover:bg-accent"
 												onClick={() => setMobileMenuOpen(false)}>
-												{item.title}
+												{t(item.key, item.title)}
 											</Link>
 										)}
 									</li>
@@ -139,7 +166,26 @@ export function MainNav() {
 						<div className="mt-6">
 							<div className="relative mb-4">
 								<Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-								<Input type="search" placeholder="输入搜索内容" className="w-full pl-9" />
+								<Input type="search" placeholder={t('nav.searchPlaceholder', 'Search')} className="w-full pl-9" />
+							</div>
+							<div className="mb-4">
+								<div className="text-xs text-muted-foreground mb-2">{t('nav.lang.label', 'Language')}</div>
+								<div className="flex gap-2">
+									<Button
+										variant={locale === 'zh' ? 'default' : 'outline'}
+										size="sm"
+										onClick={() => setLanguage('zh')}
+									>
+										{t('nav.lang.zh', '中文')}
+									</Button>
+									<Button
+										variant={locale === 'en' ? 'default' : 'outline'}
+										size="sm"
+										onClick={() => setLanguage('en')}
+									>
+										{t('nav.lang.en', 'English')}
+									</Button>
+								</div>
 							</div>
 							<Link href="https://github.com/ledboot/crypto-hub" target="_blank" rel="noopener noreferrer">
 								<Button variant="ghost" size="icon" className="w-6 h-6">

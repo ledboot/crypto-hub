@@ -1,0 +1,21 @@
+{
+  "name": "projects/1177597800619792348",
+  "projectId": "1177597800619792348",
+  "title": "CryptoHubs",
+  "origin": "STITCH",
+  "projectType": "TEXT_TO_UI_PRO",
+  "visibility": "PRIVATE",
+  "deviceType": "DESKTOP",
+  "metadata": {
+    "userRole": "OWNER"
+  },
+  "designTheme": {
+    "colorMode": "DARK",
+    "customColor": "#0d59f2",
+    "font": "INTER",
+    "roundness": "ROUND_FOUR",
+    "saturation": 3
+  },
+  "createTime": "2026-03-17T06:29:21.375739Z",
+  "updateTime": "2026-03-17T07:58:47.594660Z"
+}

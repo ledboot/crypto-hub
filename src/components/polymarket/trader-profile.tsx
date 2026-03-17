@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { ChevronLeft, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { useI18n } from '@/components/i18n-provider'
 
 export interface TraderProfile {
 	address: string
@@ -39,6 +40,7 @@ interface TraderProfileProps {
 
 export function TraderProfile({ id }: TraderProfileProps) {
 	const router = useRouter()
+	const { t } = useI18n()
 	const [profile, setProfile] = useState<TraderProfile | null>(null)
 	const [positions, setPositions] = useState<Position[]>([])
 	const [loading, setLoading] = useState(true)
@@ -81,7 +83,7 @@ export function TraderProfile({ id }: TraderProfileProps) {
 				}
 			} catch (err) {
 				console.error('Error fetching trader:', err)
-				setError('Failed to load trader profile')
+				setError('FETCH_FAILED')
 			} finally {
 				setLoading(false)
 			}
@@ -105,11 +107,15 @@ export function TraderProfile({ id }: TraderProfileProps) {
 			<div className="container mx-auto py-8 px-4">
 				<Button variant="ghost" className="mb-6 pl-0 hover:pl-2 transition-all" onClick={() => router.back()}>
 					<ChevronLeft className="h-4 w-4 mr-2" />
-					Back to Leaderboard
+					{t('polymarket.profile.back', 'Back to Leaderboard')}
 				</Button>
 				<div className="text-center py-20 text-muted-foreground">
-					<p className="text-lg">Trader not found</p>
-					<p className="text-sm mt-2">{error || 'Unable to load trader profile'}</p>
+					<p className="text-lg">{t('polymarket.profile.notFound', 'Trader not found')}</p>
+					<p className="text-sm mt-2">
+						{error === 'FETCH_FAILED'
+							? t('polymarket.profile.loadFailed', 'Failed to load trader profile')
+							: error || t('polymarket.profile.loadFailed', 'Failed to load trader profile')}
+					</p>
 				</div>
 			</div>
 		)
@@ -119,7 +125,7 @@ export function TraderProfile({ id }: TraderProfileProps) {
 		<div className="container mx-auto py-8 px-4">
 			<Button variant="ghost" className="mb-6 pl-0 hover:pl-2 transition-all" onClick={() => router.back()}>
 				<ChevronLeft className="h-4 w-4 mr-2" />
-				Back to Leaderboard
+				{t('polymarket.profile.back', 'Back to Leaderboard')}
 			</Button>
 
 			<TraderDetails profile={profile} positions={positions} />

@@ -1,9 +1,9 @@
 'use client'
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
 import { useRouter } from 'next/navigation'
 import { ExternalLink } from 'lucide-react'
+import { useI18n } from '@/components/i18n-provider'
 
 export interface Trader {
 	address: string
@@ -19,6 +19,7 @@ interface TradersTableProps {
 
 export function TradersTable({ data }: TradersTableProps) {
 	const router = useRouter()
+	const { t } = useI18n()
 
 	const formatCurrency = (value: number) => {
 		return new Intl.NumberFormat('en-US', {
@@ -56,8 +57,8 @@ export function TradersTable({ data }: TradersTableProps) {
 				<TableHeader>
 					<TableRow>
 						<TableHead className="w-[60px]">#</TableHead>
-						<TableHead>Trader</TableHead>
-						<TableHead className="text-right">Volume</TableHead>
+						<TableHead>{t('polymarket.table.trader', 'Trader')}</TableHead>
+						<TableHead className="text-right">{t('polymarket.table.volume', 'Volume')}</TableHead>
 						<TableHead className="text-right">PnL</TableHead>
 					</TableRow>
 				</TableHeader>
@@ -66,7 +67,7 @@ export function TradersTable({ data }: TradersTableProps) {
 						<TableRow
 							key={trader.address}
 							className="cursor-pointer hover:bg-muted/50"
-							onClick={() => window.open(`https://polymarket.com/profile/${trader.address}`, '_blank')}
+							onClick={() => router.push(`/polymarket/traders/${trader.address}`)}
 						>
 							<TableCell className="font-medium text-muted-foreground">{index + 1}</TableCell>
 							<TableCell>
@@ -81,7 +82,17 @@ export function TradersTable({ data }: TradersTableProps) {
 									<div className="flex flex-col min-w-0">
 										<div className="flex items-center gap-2">
 											<span className="font-medium truncate">{getDisplayName(trader)}</span>
-											<ExternalLink className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+											<button
+												type="button"
+												className="text-muted-foreground hover:text-foreground transition-colors"
+												onClick={(event) => {
+													event.stopPropagation()
+													window.open(`https://polymarket.com/profile/${trader.address}`, '_blank')
+												}}
+												aria-label={t('polymarket.table.openProfile', 'Open profile on Polymarket')}
+											>
+												<ExternalLink className="h-3 w-3 flex-shrink-0" />
+											</button>
 										</div>
 										{trader.username && (
 											<span className="text-xs text-muted-foreground truncate">{shortenAddress(trader.address)}</span>

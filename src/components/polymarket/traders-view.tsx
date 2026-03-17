@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { TradersTable, Trader } from '@/components/polymarket/traders-table'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Search, Loader2, ArrowUpDown, TrendingUp, DollarSign, BarChart3 } from 'lucide-react'
+import { Search, Loader2, ArrowUpDown, TrendingUp, DollarSign } from 'lucide-react'
+import { useI18n } from '@/components/i18n-provider'
 
 interface TradersResponse {
 	traders: Trader[]
@@ -15,8 +15,8 @@ interface TradersResponse {
 }
 
 const SORT_OPTIONS = [
-	{ value: 'pnl', label: 'PnL (Highest)', icon: TrendingUp },
-	{ value: 'volume', label: 'Volume (Highest)', icon: DollarSign },
+	{ value: 'pnl', labelKey: 'polymarket.traders.sort.pnl', label: 'PnL (Highest)', icon: TrendingUp },
+	{ value: 'volume', labelKey: 'polymarket.traders.sort.volume', label: 'Volume (Highest)', icon: DollarSign },
 ]
 
 const TIME_PERIOD_OPTIONS = [
@@ -29,6 +29,7 @@ const TIME_PERIOD_OPTIONS = [
 const PAGE_SIZE = 50
 
 export function TradersView() {
+	const { t } = useI18n()
 	const [traders, setTraders] = useState<Trader[]>([])
 	const [loading, setLoading] = useState(true)
 	const [loadingMore, setLoadingMore] = useState(false)
@@ -120,8 +121,10 @@ export function TradersView() {
 	return (
 		<div className="container mx-auto py-8 px-4">
 			<div className="flex flex-col gap-2 mb-6">
-				<h1 className="text-3xl font-bold tracking-tight">Traders Leaderboard</h1>
-				<p className="text-muted-foreground">Top performing traders on Polymarket ranked by profit and volume</p>
+				<h1 className="text-3xl font-bold tracking-tight">{t('polymarket.traders.title', 'Traders Leaderboard')}</h1>
+				<p className="text-muted-foreground">
+					{t('polymarket.traders.subtitle', 'Top performing traders on Polymarket ranked by profit and volume')}
+				</p>
 			</div>
 
 			{/* Filters */}
@@ -130,7 +133,7 @@ export function TradersView() {
 				<div className="relative flex-1 max-w-md">
 					<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 					<Input
-						placeholder="Search by username or address..."
+						placeholder={t('polymarket.traders.search', 'Search by username or address...')}
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
 						className="pl-10"
@@ -148,7 +151,7 @@ export function TradersView() {
 							<SelectItem key={option.value} value={option.value}>
 								<div className="flex items-center gap-2">
 									<option.icon className="h-4 w-4" />
-									{option.label}
+									{t(option.labelKey, option.label)}
 								</div>
 							</SelectItem>
 						))}
@@ -182,8 +185,8 @@ export function TradersView() {
 				<>
 					{traders.length === 0 ? (
 						<div className="text-center py-20 text-muted-foreground">
-							<p className="text-lg">No traders found</p>
-							<p className="text-sm mt-2">Try adjusting your search</p>
+							<p className="text-lg">{t('polymarket.traders.empty', 'No traders found')}</p>
+							<p className="text-sm mt-2">{t('polymarket.traders.emptyTip', 'Try adjusting your search')}</p>
 						</div>
 					) : (
 						<TradersTable data={traders} />
@@ -192,7 +195,9 @@ export function TradersView() {
 					{/* Load More Trigger */}
 					<div ref={loaderRef} className="h-20 flex items-center justify-center">
 						{loadingMore && <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />}
-						{!hasMore && traders.length > 0 && <p className="text-sm text-muted-foreground">No more traders to load</p>}
+						{!hasMore && traders.length > 0 && (
+							<p className="text-sm text-muted-foreground">{t('polymarket.traders.noMore', 'No more traders to load')}</p>
+						)}
 					</div>
 				</>
 			)}
