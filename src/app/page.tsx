@@ -3,18 +3,39 @@ import {
   ArrowRight,
   BarChart3,
   CandlestickChart,
+  Check,
+  ChevronRight,
   Layers3,
-  LineChart,
-  Network,
+  Rocket,
   Search,
-  Wallet,
+  ShieldCheck,
 } from "lucide-react"
 
-const moduleCards = [
+const featurePills = ["Polymarket", "Binance Alpha", "Batch Tools", "Cross-chain", "Wallet Ops"]
+
+const valueCards = [
+  {
+    title: "Research-first Homepage",
+    description: "像 Stitch 的着陆页一样先讲价值，再直达功能入口，让新用户 10 秒理解平台能力。",
+    icon: Search,
+  },
+  {
+    title: "Operator-grade Workflow",
+    description: "把市场发现、地址验证、批量执行串在一条路径里，减少来回切页。",
+    icon: Rocket,
+  },
+  {
+    title: "Safe by Design",
+    description: "工具入口清晰分层，先看数据再执行动作，降低误操作与执行风险。",
+    icon: ShieldCheck,
+  },
+]
+
+const moduleBlocks = [
   {
     title: "Polymarket Intelligence",
-    description: "从市场发现到交易员画像，一站式完成事件市场研究。",
-    icon: LineChart,
+    subtitle: "发现高价值事件与交易员",
+    icon: BarChart3,
     links: [
       { label: "市场浏览", href: "/polymarket/markets" },
       { label: "交易员排行榜", href: "/polymarket/traders" },
@@ -22,7 +43,7 @@ const moduleCards = [
   },
   {
     title: "Binance Alpha",
-    description: "实时追踪 Alpha 数据与钱包行为，快速定位交易线索。",
+    subtitle: "验证钱包行为与信号强度",
     icon: CandlestickChart,
     links: [
       { label: "交易统计", href: "/binance-alpha/trading-statistics" },
@@ -30,8 +51,8 @@ const moduleCards = [
     ],
   },
   {
-    title: "Operator Tools",
-    description: "围绕批处理和多链操作构建的高频执行工具箱。",
+    title: "Execution Tools",
+    subtitle: "完成批量操作与链上执行",
     icon: Layers3,
     links: [
       { label: "批量地址查询", href: "/tools/batch-query" },
@@ -41,161 +62,114 @@ const moduleCards = [
   },
 ]
 
-const quickStats = [
-  { label: "功能页面", value: "9+" },
-  { label: "核心数据域", value: "2" },
-  { label: "实用工具", value: "3" },
-  { label: "支持场景", value: "多链研究 + 批量执行" },
+const stats = [
+  { label: "首页可达功能", value: "9+" },
+  { label: "核心模块", value: "3" },
+  { label: "典型工作流", value: "Discover → Verify → Execute" },
 ]
 
-const workflows = [
-  {
-    title: "发现机会",
-    description: "在 Polymarket 市场中筛选高热度事件，结合交易员排行榜锁定关键地址。",
-    icon: Search,
-  },
-  {
-    title: "验证信号",
-    description: "进入 Binance Alpha 交易统计与钱包查询，交叉验证资金行为与交易活跃度。",
-    icon: BarChart3,
-  },
-  {
-    title: "执行动作",
-    description: "在工具模块进行批量地址处理、跨链查询或钱包生成，完成研究到执行闭环。",
-    icon: Wallet,
-  },
+const steps = [
+  "发现热点市场并锁定关键交易员",
+  "交叉验证 Alpha 数据与钱包行为",
+  "批量执行地址处理和跨链动作",
 ]
 
 export default function Home() {
   return (
-    <div className="bg-background text-foreground">
-      <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
-        <div className="mx-auto grid w-full max-w-7xl gap-12 px-6 pb-16 pt-14 lg:grid-cols-2 lg:items-center lg:pb-24 lg:pt-20">
-          <div>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
-              <Network className="h-3.5 w-3.5" />
-              CryptoHubs Operations Platform
-            </div>
-            <h1 className="mb-6 text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-              把链上研究、市场追踪和批量执行
-              <span className="text-primary"> 合并到一个首页入口</span>
-            </h1>
-            <p className="mb-10 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              结合 Stitch Landing 的高可读布局与当前项目真实功能，首页直接连接 Polymarket、Binance Alpha 和
-              Tools 三大工作流，减少跳转成本，提升研究效率。
-            </p>
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <Link
-                href="/polymarket/markets"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-7 py-3 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition hover:brightness-110"
-              >
-                进入市场研究
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/tools/batch-query"
-                className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-7 py-3 text-sm font-bold transition hover:border-primary hover:text-primary"
-              >
-                打开批量工具
-              </Link>
-            </div>
-            <div className="mt-10 border-t border-border pt-8">
-              <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">核心模块</p>
-              <div className="flex flex-wrap gap-3 text-sm">
-                <span className="rounded-lg border border-border bg-card px-3 py-1.5">Polymarket</span>
-                <span className="rounded-lg border border-border bg-card px-3 py-1.5">Binance Alpha</span>
-                <span className="rounded-lg border border-border bg-card px-3 py-1.5">Batch / Wallet / Bridge Tools</span>
-              </div>
-            </div>
+    <div className="bg-slate-950 text-slate-100">
+      <section className="relative overflow-hidden border-b border-white/10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(99,102,241,0.25),transparent_40%),radial-gradient(circle_at_20%_20%,rgba(14,165,233,0.2),transparent_35%)]" />
+        <div className="relative mx-auto w-full max-w-7xl px-6 pb-20 pt-16 sm:pt-20 lg:pb-24">
+          <div className="inline-flex items-center gap-2 rounded-full border border-indigo-400/40 bg-indigo-400/10 px-3 py-1 text-xs font-semibold text-indigo-200">
+            <Check className="h-3.5 w-3.5" />
+            Stitch 风格 · CryptoHubs Homepage
           </div>
 
-          <div className="rounded-2xl border border-border bg-slate-900 text-slate-100 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-700 px-5 py-3">
-              <p className="text-sm font-semibold">CryptoHubs Dashboard Preview</p>
-              <span className="rounded-md bg-primary px-2 py-1 text-xs font-bold text-white">LIVE</span>
-            </div>
-            <div className="space-y-4 p-5">
-              <div className="grid gap-3 sm:grid-cols-2">
+          <div className="mt-8 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+            <div>
+              <h1 className="text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+                一个更像产品官网的首页，
+                <span className="block bg-gradient-to-r from-sky-300 via-indigo-300 to-purple-300 bg-clip-text text-transparent">
+                  把研究与执行完整串起来
+                </span>
+              </h1>
+              <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+                参考 Stitch landing page 的信息密度与视觉节奏，首页先讲价值、再给证据、最后给行动入口。
+                你可以从这里直接进入 Polymarket、Binance Alpha 和 Tools 的核心功能。
+              </p>
+
+              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <Link
                   href="/polymarket/markets"
-                  className="rounded-xl border border-slate-700 bg-slate-800/60 p-4 transition hover:border-primary"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-3 text-sm font-bold text-slate-900 transition hover:bg-slate-200"
                 >
-                  <p className="text-xs text-slate-400">Polymarket</p>
-                  <p className="mt-1 text-sm font-bold">Markets Scanner</p>
-                </Link>
-                <Link
-                  href="/polymarket/traders"
-                  className="rounded-xl border border-slate-700 bg-slate-800/60 p-4 transition hover:border-primary"
-                >
-                  <p className="text-xs text-slate-400">Polymarket</p>
-                  <p className="mt-1 text-sm font-bold">Top Traders</p>
-                </Link>
-                <Link
-                  href="/binance-alpha/trading-statistics"
-                  className="rounded-xl border border-slate-700 bg-slate-800/60 p-4 transition hover:border-primary"
-                >
-                  <p className="text-xs text-slate-400">Binance Alpha</p>
-                  <p className="mt-1 text-sm font-bold">Trading Stats</p>
+                  开始市场研究
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/tools/batch-query"
-                  className="rounded-xl border border-slate-700 bg-slate-800/60 p-4 transition hover:border-primary"
+                  className="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/5 px-7 py-3 text-sm font-bold text-white transition hover:bg-white/10"
                 >
-                  <p className="text-xs text-slate-400">Tools</p>
-                  <p className="mt-1 text-sm font-bold">Batch Query</p>
+                  进入执行工具
                 </Link>
               </div>
-              <div className="rounded-xl border border-slate-700 bg-slate-800/50 p-4">
-                <p className="mb-2 text-xs text-slate-400">Recommended Workflow</p>
-                <p className="text-sm font-semibold text-slate-100">
-                  Markets Discovery → Trader Profiling → Wallet Verification → Batch Execution
-                </p>
+
+              <div className="mt-8 flex flex-wrap gap-2">
+                {featurePills.map((pill) => (
+                  <span key={pill} className="rounded-md border border-white/15 bg-white/5 px-3 py-1 text-xs text-slate-300">
+                    {pill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-white/15 bg-slate-900/70 p-5 shadow-2xl backdrop-blur">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Live Workspace Preview</p>
+              <div className="mt-4 space-y-3">
+                {moduleBlocks.map((module) => (
+                  <div key={module.title} className="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <module.icon className="h-4 w-4 text-indigo-300" />
+                        <p className="text-sm font-semibold">{module.title}</p>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-slate-500" />
+                    </div>
+                    <p className="mt-1 text-xs text-slate-400">{module.subtitle}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="border-y border-border bg-slate-50/80 py-12 dark:bg-slate-900/30">
-        <div className="mx-auto grid w-full max-w-7xl gap-6 px-6 sm:grid-cols-2 lg:grid-cols-4">
-          {quickStats.map((stat) => (
-            <div key={stat.label} className="rounded-xl border border-border bg-card p-5">
-              <p className="text-2xl font-black text-primary">{stat.value}</p>
-              <p className="mt-2 text-sm font-medium text-muted-foreground">{stat.label}</p>
+      <section className="border-b border-white/10 bg-slate-900 py-10">
+        <div className="mx-auto grid w-full max-w-7xl gap-4 px-6 md:grid-cols-3">
+          {stats.map((stat) => (
+            <div key={stat.label} className="rounded-xl border border-white/10 bg-white/5 p-5">
+              <p className="text-2xl font-black text-indigo-200">{stat.value}</p>
+              <p className="mt-1 text-sm text-slate-400">{stat.label}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="py-20">
+      <section className="py-16 sm:py-20">
         <div className="mx-auto w-full max-w-7xl px-6">
-          <div className="mb-10 max-w-3xl">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">按任务组织，而不是按页面堆叠</h2>
-            <p className="mt-3 text-muted-foreground">
-              首页将项目现有能力归并为三个业务模块，每个模块都给出明确入口，避免“知道有功能但找不到入口”的问题。
-            </p>
+          <div className="max-w-2xl">
+            <h2 className="text-3xl font-bold sm:text-4xl">Why this homepage feels like Stitch</h2>
+            <p className="mt-3 text-slate-400">更强的视觉层级、清晰的价值陈述、模块化信息卡片，以及明确 CTA。</p>
           </div>
-          <div className="grid gap-6 lg:grid-cols-3">
-            {moduleCards.map((card) => (
-              <article key={card.title} className="rounded-2xl border border-border bg-card p-7">
-                <div className="mb-5 inline-flex rounded-xl bg-primary/10 p-3 text-primary">
-                  <card.icon className="h-6 w-6" />
+
+          <div className="mt-8 grid gap-5 md:grid-cols-3">
+            {valueCards.map((card) => (
+              <article key={card.title} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+                <div className="inline-flex rounded-lg bg-indigo-400/10 p-2 text-indigo-300">
+                  <card.icon className="h-5 w-5" />
                 </div>
-                <h3 className="text-xl font-bold">{card.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{card.description}</p>
-                <div className="mt-6 space-y-2">
-                  {card.links.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="group flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm font-medium transition hover:border-primary hover:text-primary"
-                    >
-                      <span>{item.label}</span>
-                      <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-                    </Link>
-                  ))}
-                </div>
+                <h3 className="mt-4 text-lg font-semibold">{card.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">{card.description}</p>
               </article>
             ))}
           </div>
@@ -204,49 +178,46 @@ export default function Home() {
 
       <section className="pb-20">
         <div className="mx-auto w-full max-w-7xl px-6">
-          <div className="mb-10 max-w-3xl">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">典型研究工作流</h2>
-            <p className="mt-3 text-muted-foreground">
-              从信息发现到执行动作，首页直接给出可复用的三段式路径，适合日常高频使用。
-            </p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {workflows.map((step, index) => (
-              <div key={step.title} className="rounded-2xl border border-border bg-card p-6">
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="rounded-xl bg-primary/10 p-2 text-primary">
-                    <step.icon className="h-5 w-5" />
-                  </div>
-                  <span className="text-xs font-semibold text-muted-foreground">STEP {index + 1}</span>
+          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-indigo-500/20 via-sky-500/10 to-purple-500/20 p-8 sm:p-10">
+            <h2 className="text-2xl font-bold sm:text-3xl">Recommended Workflow</h2>
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              {steps.map((step, idx) => (
+                <div key={step} className="rounded-xl border border-white/15 bg-slate-950/40 p-4">
+                  <p className="text-xs font-semibold text-slate-400">STEP {idx + 1}</p>
+                  <p className="mt-2 text-sm font-medium text-slate-200">{step}</p>
                 </div>
-                <h3 className="text-lg font-bold">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
-              </div>
-            ))}
+              ))}
+            </div>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/polymarket"
+                className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-bold text-slate-900 transition hover:bg-slate-200"
+              >
+                浏览 Polymarket
+              </Link>
+              <Link
+                href="/binance-alpha/trading-statistics"
+                className="inline-flex items-center justify-center rounded-xl border border-white/25 bg-white/10 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/20"
+              >
+                打开 Binance Alpha
+              </Link>
+              <Link
+                href="/tools/batch-query"
+                className="inline-flex items-center justify-center rounded-xl border border-white/25 bg-white/10 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/20"
+              >
+                使用 Batch Query
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="bg-primary py-16">
-        <div className="mx-auto w-full max-w-5xl px-6 text-center text-primary-foreground">
-          <h2 className="text-3xl font-black leading-tight sm:text-4xl">现在就开始你的 Web3 研究与执行流程</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-sm text-primary-foreground/80 sm:text-base">
-            从市场洞察到批量执行，CryptoHubs 首页已经把所有关键入口整合完毕。
-          </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link
-              href="/polymarket"
-              className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-3 text-sm font-bold text-primary transition hover:bg-slate-100"
-            >
-              浏览 Polymarket 模块
-            </Link>
-            <Link
-              href="/binance-alpha/trading-statistics"
-              className="inline-flex items-center justify-center rounded-xl border border-white/40 bg-primary/20 px-8 py-3 text-sm font-bold text-primary-foreground transition hover:bg-primary/30"
-            >
-              打开 Binance Alpha
-            </Link>
-          </div>
+      <section className="border-t border-white/10 bg-slate-950 py-10">
+        <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-4 px-6 text-center sm:flex-row sm:text-left">
+          <p className="text-sm text-slate-400">CryptoHubs · Built for high-frequency on-chain research and execution.</p>
+          <Link href="/tools/hd-wallet" className="text-sm font-semibold text-indigo-300 hover:text-indigo-200">
+            Try HD Wallet Generator →
+          </Link>
         </div>
       </section>
     </div>

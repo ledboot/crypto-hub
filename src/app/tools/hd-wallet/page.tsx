@@ -178,14 +178,15 @@ export default function HDWalletGenerator() {
   };
 
   return (
-    <div className="container mx-auto py-20">
+    <div className="min-h-[calc(100vh-4rem)] bg-slate-950 px-4 py-8 text-slate-100 sm:px-6 sm:py-10">
+      <div className="mx-auto w-full max-w-7xl">
       <div
         className={cn(
           "grid grid-rows-1 grid-cols-2 gap-6 transition-all duration-500 ease-in-out",
           isGenerating ? "grid-cols-2" : "grid-cols-1"
         )}
       >
-        <Card>
+        <Card className="border-white/10 bg-white/5 text-slate-100">
           {loading && <LoadingOverlay />}
           <CardHeader>
             <CardTitle className="text-2xl">HD Wallet Generator</CardTitle>
@@ -328,7 +329,7 @@ export default function HDWalletGenerator() {
         {walletResult && (
           <Card
             className={cn(
-              "w-full transition-all duration-500 ease-in-out transform",
+              "w-full border-white/10 bg-white/5 text-slate-100 transition-all duration-500 ease-in-out transform",
               showResult
                 ? "opacity-100 translate-x-0"
                 : "opacity-0 translate-x-1/4",
@@ -553,6 +554,7 @@ export default function HDWalletGenerator() {
             </CardContent>
           </Card>
         )}
+      </div>
       </div>
     </div>
   );
